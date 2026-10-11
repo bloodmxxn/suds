@@ -1,16 +1,24 @@
 import validators
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, parse_qs, unquote
 
 
 def parse_url(url: str):
-  if not isinstance(url, str):
-    raise ValueError("URL must be a string")
-
-  if not url:
-    raise ValueError("URL cannot be empty")
-
-  result = validators.url(url)
-  if result is not True:
+  if validators.url(url) is not True:
     raise ValueError("Invalid URL")
-  
-  return urlsplit(url)
+
+  parsed = urlsplit(url)
+
+  url_data = {
+      "raw": url,
+      "protocol": parsed.scheme,
+      "port": parsed.port,
+      "username": parsed.username,
+      "password": parsed.password,
+      "hostname": parsed.hostname,
+      "netloc": parsed.netloc,
+      "path": unquote(parsed.path),
+      "query": parse_qs(parsed.query),
+      "fragment": parsed.fragment
+  }
+
+  return url_data
