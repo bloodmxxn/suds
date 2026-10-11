@@ -1,48 +1,52 @@
 # SUDS — Suspicious URL Detection System
 
-## شاخصه‌های تشخیص URL مشکوک
+## Suspicious URL Indicators
 
-هدف SUDS شناسایی نشانه‌های احتمالی خطر در URLها است. وجود هر شاخص به‌تنهایی به معنی مخرب بودن URL نیست؛ نتیجه نهایی بر اساس مجموعه‌ای از شواهد تعیین می‌شود.
+SUDS aims to identify potentially suspicious URLs by analyzing multiple indicators. The presence of any single indicator does not necessarily mean that a URL is malicious.
 
-### 1. ویژگی‌های ساختاری URL
+### 1. URL Structure Analysis
 
-- **URL Length:** طول غیرعادی URL ممکن است نشانه‌ای از پنهان‌سازی یا استفاده از پارامترهای متعدد باشد.
-- **Hostname Length:** نام میزبان بسیار طولانی می‌تواند مشکوک باشد.
-- **Subdomain Count:** تعداد زیاد زیردامنه‌ها ممکن است برای فریب کاربران استفاده شود.
-- **IP Address:** استفاده مستقیم از آدرس IP به‌جای نام دامنه می‌تواند یک نشانه خطر باشد.
-- **URL Credentials:** وجود نام کاربری یا رمز عبور در URL ممکن است برای فریب کاربر استفاده شود.
-- **Port:** استفاده از پورت‌های غیرمعمول می‌تواند نیازمند بررسی بیشتر باشد.
-- **Path Depth:** مسیرهای بسیار عمیق یا غیرعادی ممکن است مشکوک باشند.
+- **URL Length:** Unusually long URLs may indicate obfuscation or excessive parameters.
+- **Hostname Length:** Extremely long hostnames may be suspicious.
+- **Subdomain Count:** An unusually high number of subdomains may be used to mislead users.
+- **IP Address:** Using an IP address instead of a domain name may warrant further inspection.
+- **URL Credentials:** Embedded usernames or passwords may indicate a deceptive URL.
+- **Port:** Unusual port numbers may require further investigation.
+- **Path Depth:** Excessively deep or unusual paths may be suspicious.
 
-### 2. تحلیل Query
+### 2. Query Analysis
 
-پارامترهای Query باید از نظر محتوای مشکوک بررسی شوند، از جمله:
+Inspect query parameters for potentially suspicious content, including:
 
-- وجود تگ‌هایی مانند `<script>`.
-- وجود کدهای JavaScript یا الگوهای احتمالی XSS.
-- وجود داده‌های URL-encoded یا چندبار encoded شده.
-- وجود پارامترهای طولانی، تکراری یا دارای مقادیر غیرعادی.
+- HTML tags such as `<script>`.
+- JavaScript code or potential Cross-Site Scripting (XSS) payloads.
+- URL-encoded or multiply encoded content.
+- Excessively long, duplicated, or unusual parameter values.
 
-### 3. تحلیل Fragment
+### 3. Fragment Analysis
 
-بخش پس از `#` ممکن است شامل داده‌هایی باشد که توسط JavaScript سمت مرورگر پردازش می‌شوند. وجود کدهای مشکوک، تگ‌های HTML یا الگوهای احتمالی XSS در این بخش نیازمند بررسی است.
+The fragment is the portion of a URL after `#`. Although it is generally not sent to the server, client-side JavaScript may process it.
 
-### 4. تحلیل Path
+Potential indicators include suspicious HTML tags, script-related content, and possible XSS payloads.
 
-- وجود الگوهای مشکوک یا کدهای غیرمنتظره در مسیر.
-- وجود رشته‌های URL-encoded یا چندبار encoded شده.
-- استفاده از مسیرهای طولانی یا ساختارهای غیرعادی.
-- وجود نام‌های فریبنده یا مسیرهایی که وانمود می‌کنند متعلق به سرویس‌های معتبر هستند.
+### 4. Path Analysis
 
-### 5. اعتبار و محبوبیت دامنه
+Inspect the URL path for:
 
-- **Domain Popularity:** بررسی حضور دامنه در فهرست یک میلیون دامنه محبوب.
-- **Domain Reputation:** در نسخه‌های آینده، بررسی دامنه و URL در منابع معتبر اطلاعات تهدید.
+- Unexpected or suspicious code patterns.
+- URL-encoded or multiply encoded strings.
+- Excessively long or unusually structured paths.
+- Deceptive path segments that imitate trusted services or brands.
 
-محبوب بودن دامنه تضمین‌کننده امنیت آن نیست و ناشناخته بودن دامنه نیز به‌تنهایی نشانه مخرب بودن آن محسوب نمی‌شود.
+### 5. Domain Popularity and Reputation
 
-### اصل تصمیم‌گیری
+- **Domain Popularity:** Check whether the registered domain appears in a list of the one million most popular domains.
+- **Threat Intelligence:** Future versions may compare URLs and domains against known malicious URL feeds.
 
-SUDS هر شاخص مشکوک را به‌عنوان یک نشانه مستقل ثبت می‌کند. تشخیص نهایی باید با درنظرگرفتن چندین ویژگی، اعتبار منابع و میزان اطمینان تحلیل انجام شود.
+A popular domain is not necessarily safe, and an unfamiliar domain is not necessarily malicious.
 
-**توجه:** این شاخص‌ها ابزار تحلیل و شناسایی موارد مشکوک هستند و به‌تنهایی اثبات‌کننده مخرب بودن یک URL نیستند.
+### Detection Principle
+
+SUDS records suspicious indicators independently and combines multiple pieces of evidence to assess potential risk. Each finding should include an explanation to support the final assessment.
+
+**Disclaimer:** SUDS identifies potentially suspicious patterns; these indicators alone do not prove that a URL is malicious.
