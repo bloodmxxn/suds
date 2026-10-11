@@ -1,6 +1,5 @@
 import sys
-from src.url_parser import parse_url
-from src.url_score import get_score
+from src.url_analyzer import analyze_url
 
 
 def main():
@@ -9,7 +8,7 @@ def main():
     sys.exit(1)
 
   try:
-    result = parse_url(sys.argv[1])
+    result = analyze_url(sys.argv[1])
   except ValueError as err:
     print(f"Error: {err}")
     sys.exit(1)
